@@ -1,11 +1,11 @@
 import { expect, use } from 'chai'
-import { hash256, toByteString } from 'scrypt-ts'
+import { toByteString } from 'scrypt-ts'
 import { N20_Note } from '../src/contracts/n20-note'
 import { getDefaultSigner } from './utils/txHelper'
 import chaiAsPromised from 'chai-as-promised'
 use(chaiAsPromised)
 import { stringToBytes } from 'scryptlib'
-import { bigint2buffer, offlineVerify } from '../src/note-verify'
+import { offlineVerify } from 'scrypt-verify'
 import noteJson from '../artifacts/n20-note.json'
 
 function mockData() {
@@ -48,7 +48,7 @@ describe('Test SmartContract `N20_Note`', () => {
         const dataMap = {
             mint: {
                 tick: stringToBytes('NOTE'),
-                amt: bigint2buffer(1000n * 10n ** 8n),
+                amt: 1000n * 10n ** 8n,
                 height: 2576600n,
                 tx: tx,
                 prevTx: stringToBytes(''),
@@ -56,7 +56,7 @@ describe('Test SmartContract `N20_Note`', () => {
             },
             transfer: {
                 tick: stringToBytes('NOTE'),
-                amt: bigint2buffer(1000n * 10n ** 8n),
+                amt: 1000n * 10n ** 8n,
             },
         }
 

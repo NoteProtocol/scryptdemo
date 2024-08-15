@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { expect, use } from 'chai'
 import { toByteString } from 'scrypt-ts'
 import { N20_Simple } from '../src/contracts/n20-simple'
@@ -6,7 +7,7 @@ import chaiAsPromised from 'chai-as-promised'
 use(chaiAsPromised)
 
 import { stringToBytes } from 'scryptlib'
-import { offlineVerify } from '../src/note-verify'
+import { offlineVerify } from 'scrypt-verify'
 import simpleJson from '../artifacts/n20-simple.json'
 
 describe('Test SmartContract `N20_Simple`', () => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { expect, use } from 'chai'
 import { hash256, toByteString } from 'scrypt-ts'
 import { N20_Pow } from '../src/contracts/n20-pow'
@@ -5,12 +6,12 @@ import { getDefaultSigner } from './utils/txHelper'
 import chaiAsPromised from 'chai-as-promised'
 use(chaiAsPromised)
 import { stringToBytes } from 'scryptlib'
-import { bigint2buffer, offlineVerify } from '../src/note-verify'
+import { offlineVerify } from 'scrypt-verify'
 import powJson from '../artifacts/n20-pow.json'
 
 function mockData() {
     const btcTx = toByteString(
-        '02000000000102c43df943fdc96bf5f942a50c69a8f70bf03f9e14c26c30dde4324fa657f11a3100000000001e280000c43df943fdc96bf5f942a50c69a8f70bf03f9e14c26c30dde4324fa657f11a310100000000ffffffff022202000000000000225120531d2d23cfede5a9242cc42a090cd458c4a03dbbf624110849636ff53093d3221f1f00000000000016001404a1c0e250c1a44382279339a52bbee9c4d3ce780840af3673d0af6b43a18316e978fdbd747700cd20f6b8ae049369a6262b61f30cc54f94d5a9229d1161a5739043d12edfaec68b9b30478add7e8b2357485f9f5e18242384a3616d74c4050088526a74a26f70a46d696e74a170a36e3230a47469636ba35a5a5a01000100010001002a044e4f54456d6d6d2028e2e7e382eec1f6b6fdf66550f43ee47b75b65f536813be506674a5873c8b36ac41c028e2e7e382eec1f6b6fdf66550f43ee47b75b65f536813be506674a5873c8b36889b99711b2815f212fc8dc820cb4f2e292dff53cf09c860ec5ab746b4977d9202473044022055622059d94c1cd3578ac947c79b2e5f710aed577fb85cc2d3fa5523bc70c7aa02200ba9f423129f10ce8df5a2722f1f52cca4d362ae1338b33e1b6ceb4da74a477601210228e2e7e382eec1f6b6fdf66550f43ee47b75b65f536813be506674a5873c8b3600000000'
+        '0200000000010266e273f871759c9b2d98a172eb302c14e59daafbff5fb79a8b03109b45c581370000000000ffffffffcfa6237355f38b04bbeeae1afc4f3e9c5ef77305f9afa90742d37a1782f7ab6b0100000000ffffffff022202000000000000225120fb1397257ecba1b51739192853c08209235bb662482eaebf6556170442d7f050874c080000000000160014bc5fa59b7108e0ec633e66233684bef4d4dbad480340b0c0c9c2b371a03ec4617139750610aeff3cc3844a242aa089d826835ef40c23597abd0c12cef2e7ad4f4f61c04d572c97acf95548bf7092f7e6fa67b22f4a8d552684a3616d74cf000000746a528800a26f70a46d696e74a170a36e3230a47469636ba44e4f544500000000044e4f54456d6d6d20da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b115ac41c0da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b1152a56124065fd50baecd89ca4204fbfaa0b66021d78891c9b7b9255a11b1341140247304402205a3772c8a6bd58237a7b19baafce25d1bee8e395c4b22653732fc31e1f2df903022057725f6ff98802a35b3377d9e0c809f041cc916b364be880bc61745bd487ae96012102da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b11505340000'
     )
 
     console.log(hash256(btcTx))
@@ -25,10 +26,47 @@ describe('Test SmartContract `N20_Pow`', () => {
 
     before(async () => {})
 
+    async function testVerify() {
+        const dataMap = {
+            constructor: {
+                p: '6e3230',
+                op: '6465706c6f79',
+                tick: '4e4f5445',
+                max: 2100000000000000n,
+                lim: 500000000000n,
+                dec: 8,
+                sch: '50b13619d4d936d7c5c7fb7dfbe752e33b85b33774e9e2b3779f16791fb1c749',
+                start: 27530,
+                bitwork: '3230',
+            },
+            mint: {
+                p: '6e3230',
+                op: '6d696e74',
+                tick: '4e4f5445',
+                max: 2100000000000000n,
+                lim: 500000000000n,
+                dec: 8,
+                sch: '50b13619d4d936d7c5c7fb7dfbe752e33b85b33774e9e2b3779f16791fb1c749',
+                start: 27530,
+                bitwork: '3230',
+                amt: 500000000000n,
+                height: 27577,
+                // total: 0n,
+                tx: '0200000000010266e273f871759c9b2d98a172eb302c14e59daafbff5fb79a8b03109b45c581370000000000ffffffffcfa6237355f38b04bbeeae1afc4f3e9c5ef77305f9afa90742d37a1782f7ab6b0100000000ffffffff022202000000000000225120fb1397257ecba1b51739192853c08209235bb662482eaebf6556170442d7f050874c080000000000160014bc5fa59b7108e0ec633e66233684bef4d4dbad480340b0c0c9c2b371a03ec4617139750610aeff3cc3844a242aa089d826835ef40c23597abd0c12cef2e7ad4f4f61c04d572c97acf95548bf7092f7e6fa67b22f4a8d552684a3616d74cf000000746a528800a26f70a46d696e74a170a36e3230a47469636ba44e4f544500000000044e4f54456d6d6d20da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b115ac41c0da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b1152a56124065fd50baecd89ca4204fbfaa0b66021d78891c9b7b9255a11b1341140247304402205a3772c8a6bd58237a7b19baafce25d1bee8e395c4b22653732fc31e1f2df903022057725f6ff98802a35b3377d9e0c809f041cc916b364be880bc61745bd487ae96012102da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b11505340000',
+            },
+            transfer: { tick: '4e4f5445' },
+        }
+        console.log('🚀 ~ it ~ dataMap:', dataMap)
+        const result = offlineVerify(powJson, dataMap, 'mint')
+        console.log('🚀 ~ it ~ result:', result)
+        expect(result.success).is.true
+        return { success: false, error: result, result: { success: true, txId: '' } }
+    }
+
     it('should pass the public method unit test successfully.', async () => {
         await N20_Pow.loadArtifact()
 
-        instance = new N20_Pow(toByteString('NOTE', true), 2100n * 10000n, 5000n, 8n, toByteString('e=', true), 827000n)
+        instance = new N20_Pow(toByteString('NOTE', true), 2100n * 10000n, 5000n, 8n, toByteString('20', true), 27530n)
 
         await instance.connect(getDefaultSigner())
 
@@ -37,7 +75,7 @@ describe('Test SmartContract `N20_Pow`', () => {
 
         const call = async () => {
             {
-                const callRes = await instance.methods.mint(toByteString('NOTE', true), 2500n, (2100n * 10000n * 3n) / 4n - 1n, 827000n, tx)
+                const callRes = await instance.methods.mint(toByteString('NOTE', true), 2500n, (2100n * 10000n * 3n) / 4n - 1n, 27530n, tx)
             }
         }
         await expect(call()).not.to.be.rejected
@@ -55,28 +93,73 @@ describe('Test SmartContract `N20_Pow`', () => {
         const dataMap = {
             constructor: {
                 tick: stringToBytes('NOTE'),
-                max: bigint2buffer(21000000n * 10n ** 8n),
-                lim: bigint2buffer(1000n * 10n ** 8n),
-                dec: 8n,
-                start: 827000n,
-                bitwork: toByteString('e=', true),
+                max: 21000000n * 10n ** 8n,
+                lim: 5000n * 10n ** 8n,
+                dec: 8,
+                start: 27530,
+                bitwork: stringToBytes('20'),
             },
             mint: {
                 tick: stringToBytes('NOTE'),
-                amt: bigint2buffer(1000n * 10n ** 8n),
-                height: 827122n,
+                amt: 5000n * 10n ** 8n,
+                height: 27572,
                 tx: tx,
                 prevTx: stringToBytes(''),
-                total: 0n,
+                total: 0,
+                max: 21000000n * 10n ** 8n,
+                lim: 5000n * 10n ** 8n,
+                dec: 8,
+                start: 27530,
+                bitwork: stringToBytes('20'),
             },
             transfer: {
                 tick: stringToBytes('NOTE'),
-                amt: bigint2buffer(1000n * 10n ** 8n),
+                amt: 1000n * 10n ** 8n,
             },
         }
+        console.log('🚀 ~ it ~ dataMap:', dataMap)
 
         const result = offlineVerify(powJson, dataMap, 'mint')
+        console.log('🚀 ~ it ~ result:', result)
         expect(result.success).is.true
+    })
+
+    it('should offchain verify success. again', async () => {
+        console.log(testVerify())
+        // const dataMap = {
+        //     constructor: {
+        //         p: '6e3230',
+        //         op: '6465706c6f79',
+        //         tick: '4e4f5445',
+        //         max: 2100000000000000n,
+        //         lim: 500000000000n,
+        //         dec: 8,
+        //         sch: '50b13619d4d936d7c5c7fb7dfbe752e33b85b33774e9e2b3779f16791fb1c749',
+        //         start: 27530,
+        //         bitwork: '3230',
+        //     },
+        //     mint: {
+        //         p: '6e3230',
+        //         op: '6d696e74',
+        //         tick: '4e4f5445',
+        //         max: 2100000000000000n,
+        //         lim: 500000000000n,
+        //         dec: 8,
+        //         sch: '50b13619d4d936d7c5c7fb7dfbe752e33b85b33774e9e2b3779f16791fb1c749',
+        //         start: 27530,
+        //         bitwork: '3230',
+        //         amt: 500000000000n,
+        //         height: 27577,
+        //         total: 0n,
+        //         tx: '0200000000010266e273f871759c9b2d98a172eb302c14e59daafbff5fb79a8b03109b45c581370000000000ffffffffcfa6237355f38b04bbeeae1afc4f3e9c5ef77305f9afa90742d37a1782f7ab6b0100000000ffffffff022202000000000000225120fb1397257ecba1b51739192853c08209235bb662482eaebf6556170442d7f050874c080000000000160014bc5fa59b7108e0ec633e66233684bef4d4dbad480340b0c0c9c2b371a03ec4617139750610aeff3cc3844a242aa089d826835ef40c23597abd0c12cef2e7ad4f4f61c04d572c97acf95548bf7092f7e6fa67b22f4a8d552684a3616d74cf000000746a528800a26f70a46d696e74a170a36e3230a47469636ba44e4f544500000000044e4f54456d6d6d20da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b115ac41c0da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b1152a56124065fd50baecd89ca4204fbfaa0b66021d78891c9b7b9255a11b1341140247304402205a3772c8a6bd58237a7b19baafce25d1bee8e395c4b22653732fc31e1f2df903022057725f6ff98802a35b3377d9e0c809f041cc916b364be880bc61745bd487ae96012102da6c71b73fb5462258b16c60f30465fc5985fe9e63610e671f7c8bfddab3b11505340000',
+        //     },
+        //     transfer: { tick: '4e4f5445' },
+        // }
+        // console.log('🚀 ~ it ~ dataMap:', dataMap)
+
+        // const result = offlineVerify(powJson, dataMap, 'mint')
+        // console.log('🚀 ~ it ~ result:', result)
+        // expect(result.success).is.true
     })
 
     it('test limit', async () => {
@@ -91,7 +174,7 @@ describe('Test SmartContract `N20_Pow`', () => {
                     lim: 5000n * 10n ** 8n,
                     dec: 8n,
                     start,
-                    bitwork: toByteString('e=', true),
+                    bitwork: toByteString('20', true),
                 },
                 mint: {
                     tick: stringToBytes('NOTE'),
