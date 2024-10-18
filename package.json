@@ -33,7 +33,7 @@
     "rabinsig": "^4.2.1",
     "scrypt-ts": "^1.3.31",
     "scrypt-ts-lib": "^0.1.28",
-    "scrypt-verify": "^1.1.0",
+    "scrypt-verify": "github:NoteProtocol/scrypt-verify",
     "scryptlib": "^2.1.42"
   },
   "devDependencies": {

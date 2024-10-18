@@ -24,8 +24,8 @@ importers:
         specifier: ^0.1.28
         version: 0.1.28
       scrypt-verify:
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: github:NoteProtocol/scrypt-verify
+        version: https://codeload.github.com/NoteProtocol/scrypt-verify/tar.gz/f2bdf75ba5a3464bb2089a87a689885d64078553
       scryptlib:
         specifier: ^2.1.42
         version: 2.1.42
@@ -1429,8 +1429,9 @@ packages:
     resolution: {integrity: sha512-LKIzgXPa1XXGFUAh7+imj33jlv1yO8DNNVyKOQjtvkoDVq18lodH3j3sCLmTdlr3riKX7E/K9GSqThti21pV4w==}
     engines: {node: '>=16'}
 
-  scrypt-verify@1.1.0:
-    resolution: {integrity: sha512-WprlFmiiwcenMPJrX0o1geoIMckzdeAp9JYtLILHwcjVUTwAa/Dc6jBUiS7cNe73IbfxLP4+ZtsBk2sKTI1tmA==}
+  scrypt-verify@https://codeload.github.com/NoteProtocol/scrypt-verify/tar.gz/f2bdf75ba5a3464bb2089a87a689885d64078553:
+    resolution: {tarball: https://codeload.github.com/NoteProtocol/scrypt-verify/tar.gz/f2bdf75ba5a3464bb2089a87a689885d64078553}
+    version: 1.1.0
 
   scryptlib@2.1.42:
     resolution: {integrity: sha512-7j/SIuB7YPPKTO67L+nw8nOguW1TwpAumIvBB0W3DkMzyUg6lxEe/ntKjd/n51lgzObeEz4Cs71S3eV8zt+yTw==}
@@ -3160,7 +3161,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  scrypt-verify@1.1.0:
+  scrypt-verify@https://codeload.github.com/NoteProtocol/scrypt-verify/tar.gz/f2bdf75ba5a3464bb2089a87a689885d64078553:
     dependencies:
       scryptlib: https://codeload.github.com/chainbow/scryptlib/tar.gz/82c16f10f59feb50da9a6ac13a36fae2f23a1a22
 
